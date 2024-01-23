@@ -47,8 +47,9 @@ We need to configure the following files:
     - DHCP works by default. (Only configure clients network, in this case `netplan`).
     - DNS default. (Only specify the DNS server in clients)
     - Firewall -> all HTTP connections open.
-- [netplan.yml clients](./netplan.yml)
-- [smb.conf](./smb.conf)
+- [etc/netplan/ clients](./netplan.yml)
+- [etc/samba/smb.conf](./smb.conf)
+- [etc/hosts of server](./hosts)
 - AD is manually configured with `samba-tool` command.
 
 ## Conclusion
@@ -60,6 +61,7 @@ We need to configure the following files:
     - Add a Windows client to the network. (It IS possible with the current setup).
     - Configure a more restrictive firewall.
     - Configure a VPN for accesing this private network from the outside of the network.
+    - Configure users extensively.
 
 ## Appendix
 [pfSense](https://docs.netgate.com/pfsense/en/latest/general/what-is-pfsense.html)
