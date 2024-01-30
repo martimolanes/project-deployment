@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: mariadb:10.5
+    volumes:
+      - ./db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Mola1515_
+      MYSQL_DATABASE: etherpad
+      MYSQL_USER: etherpad
+      MYSQL_PASSWORD: admin
+  etherpad:
+    depends_on:
+      - db
+    image: martimolanes/etherpad:latest
+    environment:
+      DB_TYPE: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: etherpad
+      DB_USER: etherpad
+      DB_PASS: admin
+      ADMIN_PASSWORD: Mola1515_
+      USER_PASSWORD: admin
+    ports:
+      - 9001:9001
