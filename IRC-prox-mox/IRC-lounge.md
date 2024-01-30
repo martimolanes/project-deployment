@@ -2,54 +2,87 @@
 
 ## Abstract
 
-This project involves deploying an IRC server for company-wide instant messaging, requiring research on IRC components. Using Irssi client for linux command line, IRC InspIRCd server (...)
+This project involves deploying an IRC server for instant messaging, requiring research on IRC components. Using Irssi client for linux CLI and a self-hosted IRC InspIRCd server and a web client (thelounge).
 
 ## Table of contents
 
 1. [Introduction](#introduction)
 2. [Research and Familiarization](#research-and-familiarization)
-3. [IRC Server Deployment](#irc-server-deployment)
-4. [Client Setup](#client-setup)
-5. [Testing and Communication](#client-setup)
-6. [Accessibility](#accessibility)
-7. [Conclusion](#conclusion)
-8. [Appendix](#appendix)
+3. [Deployment](#deployment)
+    - [Server Setup](#irc-server-deployment)
+    - [Client Setup](#client-setup)
+4. [HOW TO ACCESS](#how-to-access)
+4. [Conclusion](#conclusion)
+5. [Appendix](#appendix)
 
 ---
 
 ## Introduction
 
-IRC (Internet Relay Chat) is an older instant messaging service comprising clients, servers, a communication protocol, and server platform.
+Internet Relay Chat (IRC) is a text-based chat system for instant messaging. IRC is designed for group communication in discussion forums, called channels, but also allows one-on-one communication via private messages.
+
+This is implemented as an application layer protocol.
 
 ## Research and Familiarization
-   - Understand the components of IRC, including clients, servers, communication protocols, and server platforms.
-   - Explore the functionality and features of IRC to gain insights into its operation.
+   - Understand the components of IRC, including clients, servers, communication protocols.
+   
+   For this project, we wanted to have a IRC Server in the XAMK network. This network is private, only accessible from some classes of the campus. 
 
-## IRC Server Deployment
-   - Deploy an IRC server to facilitate communication between clients.
-   - Choose a suitable server platform or cloud service for hosting the IRC server.
-   - Ensure that the IRC server is accessible within the xamklab network.
+   We wanted to self-host a client for the IRC Server, finding one called [The Lounge](https://thelounge.chat/). IRC Server called [InspIRCd](https://www.inspircd.org/) filled our needs for the server with their docker image. Also, for a terminal client, we executed [Irssi](https://irssi.org/).
 
-## Client Setup
-   - Set up two IRC clients for testing and communication.
-   - One client must be Irssi, designed for the Linux command line (a Windows version also exists).
-   - Choose another IRC client software (options available in the Wikipedia article) for the second client.
+## Deployment
 
-## Testing and Communication
-   - Verify the successful connection between the deployed IRC server and the clients.
-   - Ensure both Irssi and the chosen additional client can communicate effectively.
+### Server Setup
 
-## Accessibility
-   - Aim for a full points solution by making the IRC server accessible from the xamklab network.
-   - Optionally, explore the possibility of making the server accessible from the internet using a cloud service or a separate server.
+#### InspIRCd
+
+We deployed the IRC Server in a proxmox-vm, using the [docker image InspIRCd](https://hub.docker.com/r/inspircd/inspircd-docker/dockerfile/). With the simple command:
+
+```bash
+sudo docker run -d --name ircd -p 6667:6667 inspircd/inspircd-docker
+```
+
+### Client Setup
+
+#### The Lounge
+
+We self-host the web client [The Lounge](https://thelounge.chat/) in the same proxmox-vm as the server. In this case, instead of deploying a docker image like in the server, we installed it as a debian package.
+
+> This is not recommended for production, but 'cause we wanted to experience how different is a installation in a fresh vm over a docker image; this caused several problems:<br>- apt repositories didn't have support for the node version required by thelounge, so we had to install it manually and force the `dpkg` installation with `force-all`<br>- deal with permissions errors.
+
+Then, we managed to execute the web client in the port 9000 and execute it as a `systemctl` service ([thelounge.service](./thelounge.service)).
+
+config file: [config.js](./config.js)
+
+#### Irssi
+
+We installed the terminal client [Irssi](https://irssi.org/) in a linux machine.
+
+## HOW TO ACCESS 
+
+Our server is deployed in the XAMK network, with the following address `172.20.49.11`.
+
+**(RECOMMENDED)** If you want to connect to the server, you can use the web client [The Lounge](https://thelounge.chat/) in the following address: [172.20.49.11:9000](http://172.20.49.11:9000).
+
+> Address already configured to access the server.
+
+If you want to use [Irssi](https://irssi.org/) do it with the following commands:
+
+ `/connect 172.20.49.11`<br>
+ `/channel #general`<br>
+ `/nick <your-nick>`<br>
+ `/msg #general <your-message>`<br>
 
 ## Conclusion
 
-Summarize the key achievements, challenges, and outcomes of the IRC server deployment project. Highlight the importance of having a reliable instant messaging platform for company-wide communication.
-
----
-
 ## Appendix
 
+[IRC](https://en.wikipedia.org/wiki/Internet_Relay_Chat)
 
+[InspIRCd](https://www.inspircd.org/)
 
+[The Lounge](https://thelounge.chat/)
+
+[Irssi](https://irssi.org/)
+
+[docker image InspIRCd](https://hub.docker.com/r/inspircd/inspircd-docker/dockerfile/)
