@@ -66,6 +66,8 @@ Our server is deployed in the XAMK network, with the following address `172.20.4
 
 > Address already configured to access the server.
 
+> The Lounge offer support for multiple devices through a web browser, it supports [PWA](https://en.wikipedia.org/wiki/Progressive_web_app) so it's possible to install it as a native app in your phone.
+
 If you want to use [Irssi](https://irssi.org/) do it with the following commands:
 
  `/connect 172.20.49.11`<br>
