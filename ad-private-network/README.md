@@ -17,6 +17,7 @@ This report presents the design and deployment of a private network, both virtua
 For the Virtual Deployment, we used VirtualBox to create 4 VMs: 1 Ubuntu Server (SAMBA/AD server), 1 pfSense (router), and 1 Ubuntu Desktop (another client).
 
 The topology of the network is as follows:
+
 ![Virtual Network Topology](./images/virtual-network-topology.png)
 
 > Bridged: Used for connecting pfSense to internet if it were a real router. The connection through the host machine is transparent. Note: We could have used NAT.
@@ -27,6 +28,7 @@ The topology of the network is as follows:
 For the Real Deployment, we used Cisco hardware to create a network with 3 PCs (1 SAMBA/AD server, and 2 client).
 
 The topology of the network is as follows:
+
 ![Real Network Topology](./images/real-network-topology.png)
 > Note: The topology is the same as the virtual network, except that the pfSense router is replaced with a Cisco router.
 
