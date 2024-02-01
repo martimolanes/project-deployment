@@ -50,9 +50,9 @@ We self-host the web client [The Lounge](https://thelounge.chat/) in the same pr
 
 > This is not recommended for production, but 'cause we wanted to experience how different is a installation in a fresh vm over a docker image; this caused several problems:<br>- apt repositories didn't have support for the node version required by thelounge, so we had to install it manually and force the `dpkg` installation with `force-all`<br>- deal with permissions errors.
 
-Then, we managed to execute the web client in the port 9000 and execute it as a `systemctl` service ([thelounge.service](./thelounge.service)).
+Then, we managed to execute the web client in the port 9000 and execute it as a `systemctl` service ([thelounge.service](./config-files/thelounge.service)).
 
-config file: [config.js](./config.js)
+config file: [config.js](./config-files/config.js)
 
 #### Irssi
 

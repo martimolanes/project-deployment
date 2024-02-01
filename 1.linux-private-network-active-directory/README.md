@@ -49,9 +49,9 @@ We need to configure the following files:
     - DHCP works by default. (Only configure clients network, in this case `netplan`).
     - DNS default. (Only specify the DNS server in clients)
     - Firewall -> all HTTP connections open.
-- [etc/netplan/ clients](./netplan.yml)
-- [etc/samba/smb.conf](./smb.conf)
-- [etc/hosts of server](./hosts)
+- [etc/netplan/ clients](./config-files/netplan.yml)
+- [etc/samba/smb.conf](./config-files/smb.conf)
+- [etc/hosts of server](./config-files/hosts)
 - AD is manually configured with `samba-tool` command.
 
 ## Conclusion

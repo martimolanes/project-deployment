@@ -20,7 +20,7 @@ This report provides a detailed walk-through of our process to **deploy an insta
 
 In this report, we outline the steps we took to deploy an Etherpad instance on Oracle Cloud using Docker. This is a simple Overview of the full project:
 
-![High Level Architecture Diagram](./etherpad-architecture-diagram.png)
+![High Level Architecture Diagram](./images/etherpad-architecture-diagram.png)
 
 ## Pre-requisites
 
@@ -43,7 +43,7 @@ git clone https://github.com/ether/etherpad-lite.git
 We then modified the configuration file to suit our needs:
 1. Enable the authentication system
 
-[settings.json.docker](./settings.json.docker)
+[settings.json.docker](./config-files/settings.json.docker)
 
 > We added the authentication and a new user
 
@@ -59,7 +59,7 @@ docker build --tag personalized/etherpad .
 
 Next, we created a Docker Compose file to manage our Etherpad and MariaDB containers. 
 
-[docker-compose.yml](./docker-compose.yml)
+[docker-compose.yml](./config-files/docker-compose.yml)
 
 > We added the official [MariaDB container](https://hub.docker.com/_/mariadb) and the environment variables
 
