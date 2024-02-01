@@ -77,6 +77,8 @@ If you want to use [Irssi](https://irssi.org/) do it with the following commands
 
 ## Conclusion
 
+We set up an IRC server using InspIRCd and a web client called The Lounge right in the XAMK network. We hit a few bumps along the way, but we learned from it. We even got a terminal client, Irssi, up and running on a Linux machine. Now, anyone in the XAMK network can chat in real-time, whether they prefer a web interface or a terminal.
+
 ## Appendix
 
 [IRC](https://en.wikipedia.org/wiki/Internet_Relay_Chat)
