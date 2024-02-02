@@ -1,119 +1,123 @@
 // Import necessary modules
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const cors = require('cors');
-const database = require('./database.js');
+const express = require("express");
+const sqlite3 = require("sqlite3").verbose();
+const cors = require("cors");
+const database = require("./database.js");
 
 // Create Express app
 const app = express();
 
-app.use(express.json()); // for parsing application/json
-
 // Set up middleware
+app.use(express.json()); // for parsing application/json
 app.use(cors());
 
 let db = database.setupDatabase();
 
-// Define routes
-app.get('/', (_, res) => { res.send('Hello, world!'); });
-app.get('/categories', (_, res) => { 
-    db.all('SELECT * FROM Categories', (err, rows) => {
-        if (err) {
-            console.error(err.message);
-        }
-        res.send(rows);
-    });
-});
-app.get('/jokes/random', (req, res) => { /* ... */ });
-app.get('/jokes/category/:category/random', (req, res) => { 
-    const category = req.params.category;
-    console.log(category);
-    const stmt = db.prepare('SELECT id_category FROM Categories WHERE category = ?');
-    stmt.get(category, (err, row) => {
-        if (err) {
-            console.error(err.message);
-        }
-        const id_category = row.id_category;
-        console.log(id_category);
-        const stmt1 = db.prepare('SELECT id_joke FROM JokesCategories WHERE id_category = ? ORDER BY RANDOM() LIMIT 1');
-        stmt1.get(id_category, (err, row) => {
-            if (err) {
-                console.error(err.message);
-            }
-            const id_joke = row.id_joke;
-            console.log(id_joke);
-            const stmt2 = db.prepare('SELECT joke_content FROM Jokes WHERE id_joke = ?');
-            stmt2.get(id_joke, (err, row) => {
-                if (err) {
-                    console.error(err.message);
-                }
-                const joke_content = row.joke_content;
-                res.json({ joke: joke_content });
-            });
-            stmt2.finalize();
-        });
-        stmt1.finalize();
-    });
-    stmt.finalize();
-});
-app.get('/jokes/category/:category', (req, res) => { });
-app.get('/jokes/:id', (req, res) => { /* ... */ });
-app.post('/categories', (req, res) => { 
-    console.log('body: ' + JSON.stringify(req.body));
-    const category = req.body.category;
-    console.log(category);
-    const stmt = db.prepare('INSERT INTO Categories (category) VALUES (?)');
-    stmt.run(category, (err) => {
-        if (err) {
-            console.error(err.message);
-        }
-        res.json({ category });
-    })
-    stmt.finalize();
-});
-app.post('/jokes/category/:category', (req, res) => {
-    const category = req.params.category;
-    console.log(category);
-    const joke_content = req.body.joke_content;
-    console.log(joke_content);
-
-    const stmt = db.prepare('INSERT INTO Jokes (joke_content) VALUES (?)');
-    stmt.run(joke_content, (err) => {
-        if (err) {
-            console.error(err.message);
-        }
+// API endpoints
+// default route
+app.get("/", (_, res) => { res.send("Hello, world!"); });
+// Retrieve a random joke from all jokes in the database
+app.get("/jokes/random", async (_, res) => { 
+    try {
+        const joke_content = await database.getRandomJoke(db);
         res.json({ joke: joke_content });
-    })
-    stmt.finalize();
-
-    const stmt1 = db.prepare('SELECT id_joke FROM Jokes WHERE joke_content = ?');
-    stmt1.get(joke_content, (err, row) => {
-        if (err) {
-            console.error(err.message);
-        }
-        const id_joke = row.id_joke;
-        const stmt2 = db.prepare('SELECT id_category FROM Categories WHERE category = ?');
-        stmt2.get(category, (err, row) => {
-            if (err) {
-                console.error(err.message);
-            }
-            const id_category = row.id_category;
-            const stmt3 = db.prepare('INSERT INTO JokesCategories (id_joke, id_category) VALUES (?, ?)');
-            stmt3.run(id_joke, id_category, (err) => {
-                if (err) {
-                    console.error(err.message);
-                }
-            });
-            stmt3.finalize();
-        });
-        stmt2.finalize();
-    });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
 });
-app.put('/jokes/:id/category/:category', (req, res) => { /* ... */ });
-app.post('/jokes/:id/like', (req, res) => { /* ... */ });
-app.post('/jokes/:id/dislike', (req, res) => { /* ... */ });
+// Retrieve a random joke from a category of jokes
+app.get("/jokes/category/:category/random", async (req, res) => { 
+    const category = req.params.category;
+    try {
+        const joke_content = await database.getRandomJokeByCategory(db, category);
+        res.json({ joke: joke_content });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+// Retrieve a list of categories
+app.get("/categories", async (_, res) => { 
+    try {
+        const categories = await database.getCategories(db);
+        res.json({ categories });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+// Retrieve all jokes for a category 
+app.get("/jokes/category/:category", async (req, res) => {
+    try {
+        const category = req.params.category;
+        const jokes = await database.getJokesByCategory(db, category);
+        res.json({ jokes });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+// Retrieve a joke by id
+app.get("/jokes/:id", async (req, res) => { 
+    const id_joke = req.params.id
+    try {
+        const joke_content = await database.getJokeContent(db, id_joke);
+        res.json({ joke: joke_content });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+// Add a new category of jokes
+app.post("/categories", async (req, res) => { 
+    const category = req.body.category;
+    try {
+        await database.addCategory(db, category);
+        res.json({ category });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+// Add a new joke to a category
+app.post("/jokes/category/:category", async (req, res) => {
+    const category = req.params.category;
+    const joke_content = req.body.joke_content;
+    try {
+        await database.addNewJokeToCategory(db, joke_content, category);
+        res.json({ joke_content });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+// Add an existing joke to a category by joke id
+app.post("/jokes/:id/category/:category", async (req, res) => {
+    const id_joke = req.params.id;
+    const category = req.params.category;
+    try {
+        const id_category = await database.getCategoryId(db, category);
+        await database.addJokeToCategory(db, id_joke, id_category);
+        res.json({ id_joke, category });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+// like a joke
+app.post("/jokes/:id/like", async (req, res) => {
+    const id_joke = req.params.id;
+    try {
+        await database.likeJoke(db, id_joke);
+        res.json({ id_joke });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+// dislike a joke
+app.post("/jokes/:id/dislike", async (req, res) => {
+    const id_joke = req.params.id;
+    try {
+        await database.dislikeJoke(db, id_joke);
+        res.json({ id_joke });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
 
 // Start the server
 const port = 3333;
 app.listen(port, () => console.log(`Server is listening on port ${port}`));
-
