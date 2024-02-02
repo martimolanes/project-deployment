@@ -88,14 +88,14 @@ async function getJokeId(db, joke_content) {
     });
 }
 
-async function getJokeContent(db, joke_id) {
+async function getJoke(db, joke_id) {
     return new Promise((resolve, reject) => {
-        const stmt = db.prepare("SELECT joke_content FROM Jokes WHERE id_joke = ?");
+        const stmt = db.prepare("SELECT * FROM Jokes WHERE id_joke = ?");
         stmt.get(joke_id, (err, row) => {
             if (err) {
                 reject(err);
             } else if (row) {
-                resolve(row.joke_content);
+                resolve(row);
             } else {
                 reject(new Error("No joke found with id: " + joke_id));
             }
@@ -105,12 +105,12 @@ async function getJokeContent(db, joke_id) {
 
 async function getRandomJoke(db) {
     return new Promise((resolve, reject) => {
-        const stmt = db.prepare("SELECT joke_content FROM Jokes ORDER BY RANDOM() LIMIT 1");
+        const stmt = db.prepare("SELECT * FROM Jokes ORDER BY RANDOM() LIMIT 1");
         stmt.get((err, row) => {
             if (err) {
                 reject(err);
             } else if (row) {
-                resolve(row.joke_content);
+                resolve(row);
             } else {
                 resolve("There are NO jokes in the database!");
             }
@@ -118,12 +118,12 @@ async function getRandomJoke(db) {
     });
 }
 
-async function getRandomJokeByCategory(db, category) {
+async function getRandomJokeByCategory(db, category_name) {
     try {
-        const id_category = await getCategoryId(db, category)
+        const id_category = await getCategoryId(db, category_name)
         const id_joke = await getRandomJokeId(db, id_category);
-        const joke_content = await getJokeContent(db, id_joke);
-        return joke_content;
+        const joke = await getJoke(db, id_joke);
+        return joke;
     } catch (err) {
         throw err;
     }
@@ -144,16 +144,14 @@ async function getRandomJokeId(db, category_id) {
     });
 }
 
-async function getJokesByCategory(db, category) {
+async function getJokesByCategory(db, category_name) {
     try {
-        console.log("sex");
-        const id_category = await getCategoryId(db, category)
-        console.log("sex2");
+        const id_category = await getCategoryId(db, category_name)
         const rows = await getJokesIdByCategoryId(db, id_category);
         const jokes = await Promise.all(rows.map(async (row) => {
             const joke_id = row.id_joke;
-            const joke_content = await getJokeContent(db, joke_id);
-            return joke_content;
+            const joke = await getJoke(db, joke_id);
+            return joke;
         }));
         return jokes;
     } catch (err) {
@@ -163,7 +161,7 @@ async function getJokesByCategory(db, category) {
 
 async function getCategories(db) {
     return new Promise((resolve, reject) => {
-        const stmt = db.prepare("SELECT category FROM Categories");
+        const stmt = db.prepare("SELECT * FROM Categories");
         stmt.all((err, rows) => {
             stmt.finalize();
             if (err) {
@@ -193,15 +191,15 @@ async function getJokesIdByCategoryId(db, category_id) {
     });
 }
 
-async function addCategory(db, category) {
+async function addCategory(db, category_name) {
     return new Promise((resolve, reject) => {
         const stmt = db.prepare("INSERT INTO Categories (category) VALUES (?)");
-        stmt.run(category, (err) => {
+        stmt.run(category_name, (err) => {
             stmt.finalize();
             if (err) {
                 reject(err);
             } else {
-                resolve(category);
+                resolve(category_name);
             }
         });
     });
@@ -221,11 +219,11 @@ async function addJoke(db, joke_content) {
     });
 }
 
-async function addNewJokeToCategory(db, joke_content, category) {
+async function addNewJokeToCategory(db, joke_content, category_name) {
     try {
         await addJoke(db, joke_content);
         const id_joke = await getJokeId(db, joke_content);
-        const id_category = await getCategoryId(db, category);
+        const id_category = await getCategoryId(db, category_name);
         await addJokeToCategory(db, id_joke, id_category);
     } catch (err) {
         throw err;
@@ -277,18 +275,14 @@ async function dislikeJoke(db, joke_id) {
 module.exports = {
     setupDatabase,
     getCategoryId,
-    getJokeId,
-    getJokeContent,
-    getRandomJoke,
-    getRandomJokeId,
+    getJoke,
+    getRandomJoke, 
     getCategories,
-    getJokesIdByCategoryId,
     addCategory,
-    addJoke,
-    addJokeToCategory,
     likeJoke,
     dislikeJoke,
     getRandomJokeByCategory,
     getJokesByCategory,
     addNewJokeToCategory,
+    addJokeToCategory,
 }

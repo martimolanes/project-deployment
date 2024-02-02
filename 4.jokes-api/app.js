@@ -1,6 +1,5 @@
 // Import necessary modules
 const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
 const database = require("./database.js");
 
@@ -19,8 +18,8 @@ app.get("/", (_, res) => { res.send("Hello, world!"); });
 // Retrieve a random joke from all jokes in the database
 app.get("/jokes/random", async (_, res) => { 
     try {
-        const joke_content = await database.getRandomJoke(db);
-        res.json({ joke: joke_content });
+        const joke = await database.getRandomJoke(db);
+        res.json({ joke });
     } catch (err) {
         res.status(500).send({ error: err.message });
     }
@@ -29,8 +28,8 @@ app.get("/jokes/random", async (_, res) => {
 app.get("/jokes/category/:category/random", async (req, res) => { 
     const category = req.params.category;
     try {
-        const joke_content = await database.getRandomJokeByCategory(db, category);
-        res.json({ joke: joke_content });
+        const joke = await database.getRandomJokeByCategory(db, category);
+        res.json({ joke });
     } catch (err) {
         res.status(500).send({ error: err.message });
     }
@@ -58,8 +57,8 @@ app.get("/jokes/category/:category", async (req, res) => {
 app.get("/jokes/:id", async (req, res) => { 
     const id_joke = req.params.id
     try {
-        const joke_content = await database.getJokeContent(db, id_joke);
-        res.json({ joke: joke_content });
+        const joke = await database.getJokeContent(db, id_joke);
+        res.json({ joke });
     } catch (err) {
         res.status(500).send({ error: err.message });
     }
@@ -88,11 +87,11 @@ app.post("/jokes/category/:category", async (req, res) => {
 // Add an existing joke to a category by joke id
 app.post("/jokes/:id/category/:category", async (req, res) => {
     const id_joke = req.params.id;
-    const category = req.params.category;
+    const category_name = req.params.category;
     try {
-        const id_category = await database.getCategoryId(db, category);
+        const id_category = await database.getCategoryId(db, category_name);
         await database.addJokeToCategory(db, id_joke, id_category);
-        res.json({ id_joke, category });
+        res.json({ id_joke, category: category_name });
     } catch (err) {
         res.status(500).send({ error: err.message });
     }
