@@ -1,5 +1,5 @@
-const express = require("express");
-const database = require("../database.js");
+import express from "express";
+import * as database from "../database.js";
 
 const router = express.Router();
 
@@ -109,4 +109,4 @@ router.post("/jokes/:id/dislike", async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
