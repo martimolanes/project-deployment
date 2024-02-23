@@ -28,3 +28,7 @@ R1#show ip interface brief
 2 options
 1. Set Default gateway of PC -> router ip in XAMKLAB network (Ex. 172.xx.xx.12), like this, we can reach the private addresses of our network
 2. PAT: dont set default gateway -> we use the ip (Ex. 172.xx.xx.12), specifying a port, so the router can translate to a private address -> NAT rules
+
+## NAT
+
+ip nat inside source static 192.168.1.x interface GigabitEthernet 0/0/1
