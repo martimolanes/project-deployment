@@ -22,17 +22,23 @@ R1(config)#interface gigabitEthernet 0/0/0
 
 R1(config-if)#ip address 192.168.1.1 255.255.255.0
 
-R1(config-if)#exit
- 
 Router(config-if)#no shut
+
+R1(config-if)#exit
+
 exit
  
 ## Give XAMKLAB ip to router
+> Note: port 10 to connect to XAMKLAB
  
 interface GigabitEthernet 0/0/1
+
 R1(config-if)#ip address dhcp
+
 R1(config-if)#no shut
+
 R1(config-if)#end
+
 R1#show ip interface brief
  
 2 options
@@ -42,3 +48,6 @@ R1#show ip interface brief
 ## NAT
 
 ip nat inside source static 192.168.1.x interface GigabitEthernet 0/0/1
+
+## Router XAMKLAB
+ 172.20.48.1
