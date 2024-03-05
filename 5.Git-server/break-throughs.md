@@ -3,15 +3,25 @@ en
 config
 no logging console
 > Note: use other ip addresses cause conflicts 
+
 Router(config)#ip dhcp excluded-address 192.168.1.1 192.168.1.3
+
 Router(config)#ip dhcp pool BENINGING
+
 Router(dhcp-config)#network 192.168.1.0 255.255.255.0
+
 Router(dhcp-config)#default-router 192.168.1.1
+
 Router(dhcp-config)#lease 7
+
 exit
+
 Router(config)#do show ip int brief
+
 R1(config)#interface gigabitEthernet 0/0/0
+
 R1(config-if)#ip address 192.168.1.1 255.255.255.0
+
 R1(config-if)#exit
  
 Router(config-if)#no shut
