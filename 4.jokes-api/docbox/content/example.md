@@ -1,301 +1,205 @@
-## Wobble
+## Jokes
 
-This is our high-quality wobbles API. You can use this API to request
-and remove different wobbles at a low wibble price.
+This is our high-quality Jokes API. You can use this API to request
+and remove different jokes.
 
-### List wobbles
+### Random joke
 
-Lists all wobbles for a particular account.
+Retrive a random joke from the joke pool
 
 ```endpoint
-GET /wobbles/v1/{username}
+GET /jokes/v1/random
 ```
 
 #### Example request
 
 ```curl
-$ curl https://wobble.biz/wobbles/v1/{username}
+$ curl http://localhost:3333/v1/jokes/random
 ```
-
-```bash
-$ wbl wobbles list
-```
-
-```javascript
-client.listWobbles(function(err, wobbles) {
-  console.log(wobbles);
-});
-```
-
-```python
-wobbles.list()
-```
-
 #### Example response
 
 ```json
 [
-  {
-    "owner": "{username}",
-    "id": "{wobble_id}",
-    "created": "{timestamp}",
-    "modified": "{timestamp}"
-  },
-  {
-    "owner": "{username}",
-    "id": "{wobble_id}",
-    "created": "{timestamp}",
-    "modified": "{timestamp}"
-  }
+"joke": {
+        "id_joke": 9,
+        "joke_content": "Why was the computer cold at the office? It left its Windows open!",
+        "likes": 0,
+        "dislikes": 0
+    }
 ]
 ```
 
-### Create wobble
+### Add a new category
 
-Creates a new, empty wobble.
+Create a new category of jokes
 
 ```endpoint
-POST /wobbles/v1/{username}
+POST /v1/categories
 ```
 
 #### Example request
 
 ```curl
-curl -X POST https://wobble.biz/wobbles/v1/{username}
-```
-
-```bash
-$ wbl wobbles create
-```
-
-```javascript
-client.createWobble({
-  name: 'example',
-  description: 'An example wobble'
-}, function(err, wobble) {
-  console.log(wobble);
-});
-```
-
-```python
-response = wobbles.create(
-  name='example', description='An example wobble')
+curl -X POST -H "Content-Type: application/json" -d "{ \"category\": \"Funny Jokes\" }" http://localhost:3333/v1/categories
 ```
 
 #### Example request body
 
 ```json
 {
-  "name": "foo",
-  "description": "bar"
+    "category":"Funny jokes"
 }
 ```
 
 Property | Description
 ---|---
-`name` | (optional) the name of the wobble
-`description` | (optional) a description of the wobble
+`category` | Name of the caterogy
 
 #### Example response
 
 ```json
 {
-  "owner": "{username}",
-  "id": "{wobble_id}",
-  "name": null,
-  "description": null,
-  "created": "{timestamp}",
-  "modified": "{timestamp}"
+    "category": "Fuuny jokes"
 }
 ```
 
-### Retrieve a wobble
+### List all categories
 
-Returns a single wobble.
+Returns a list of categories
 
 ```endpoint
-GET /wobbles/v1/{username}/{wobble_id}
+GET /v1/categories/
 ```
 
-Retrieve information about an existing wobble.
+Retrieve all categories in database
 
 #### Example request
 
 ```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}
-```
-
-```bash
-$ wbl wobble read-wobble wobble-id
-```
-
-```python
-attrs = wobbles.read_wobble(wobble_id).json()
-```
-
-```javascript
-client.readWobble('wobble-id',
-  function(err, wobble) {
-    console.log(wobble);
-  });
+curl http://localhost:3333/v1/categories
 ```
 
 #### Example response
 
 ```json
 {
-  "owner": "{username}",
-  "id": "{wobble_id}",
-  "created": "{timestamp}",
-  "modified": "{timestamp}"
+    "categories": [
+        {
+            "id_category": 1,
+            "category": "Dad jokes"
+        },
+        {
+            "id_category": 2,
+            "category": "Linux jokes"
+        },
+        {
+            "id_category": 3,
+            "category": "Windows jokes"
+        }
+    ]
 }
 ```
 
-### Update a wobble
+### Random joke from a category of jokes
 
-Updates the properties of a particular wobble.
+Retrieves a random joke from a selected category
+
+To escape space in the URL if using categories with space - use `%20`
 
 ```endpoint
-PATCH /wobbles/v1/{username}/{wobble_id}
+GET /v1/jokes/category/{category}/random
 ```
 
 #### Example request
 
 ```curl
-curl --request PATCH https://wobble.biz/wobbles/v1/{username}/{wobble_id} \
-  -d @data.json
-```
-
-```python
-resp = wobbles.update_wobble(
-  wobble_id,
-  name='updated example',
-  description='An updated example wobble'
-  ).json()
-```
-
-```bash
-$ wbl wobble update-wobble wobble-id
-```
-
-```javascript
-var options = { name: 'foo' };
-client.updateWobble('wobble-id', options, function(err, wobble) {
-  console.log(wobble);
-});
-```
-
-#### Example request body
-
-```json
-{
-  "name": "foo",
-  "description": "bar"
-}
-```
-
-Property | Description
----|---
-`name` | (optional) the name of the wobble
-`description` | (optional) a description of the wobble
-
-#### Example response
-
-```json
-{
-  "owner": "{username}",
-  "id": "{wobble_id}",
-  "name": "foo",
-  "description": "bar",
-  "created": "{timestamp}",
-  "modified": "{timestamp}"
-}
-```
-
-### Delete a wobble
-
-Deletes a wobble, including all wibbles it contains.
-
-```endpoint
-DELETE /wobbles/v1/{username}/{wobble_id}
-```
-
-#### Example request
-
-```curl
-curl -X DELETE https://wobble.biz/wobbles/v1/{username}/{wobble_id}
-```
-
-```bash
-$ wbl wobble delete-wobble wobble-id
-```
-
-```python
-resp = wobbles.delete_wobble(wobble_id)
-```
-
-```javascript
-client.deleteWobble('wobble-id', function(err) {
-  if (!err) console.log('deleted!');
-});
-```
-
-#### Example response
-
-> HTTP 204
-
-### List wibbles
-
-List all the wibbles in a wobble. The response body will be a
-WobbleCollection.
-
-```endpoint
-GET /wobbles/v1/{username}/{wobble_id}/wibbles
-```
-
-#### Example request
-
-```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles
-```
-
-```bash
-$ wbl wobble list-wibbles wobble-id
-```
-
-```python
-collection = wobbles.list_wibbles(wobble_id).json()
-```
-
-```javascript
-client.listWobbles('wobble-id', {}, function(err, collection) {
-  console.log(collection);
-});
+curl http://localhost:3333/v1/jokes/category/Linux%20jokes/random
 ```
 
 #### Example response
 
 ```json
 {
-  "type": "Wobble",
-  "wibbles": [
-    {
-      "id": "{wibble_id}",
-      "type": "Wobble",
-      "properties": {
-        "prop0": "value0"
-      }
-    },
-    {
-      "id": "{wibble_id}",
-      "type": "Wobble",
-      "properties": {
-        "prop0": "value0"
-      }
+    "joke": {
+        "id_joke": 1,
+        "joke_content": "Why don't Linux users fear getting lost? Because they always have a shell to guide them!",
+        "likes": 0,
+        "dislikes": 0
     }
-  ]
 }
 ```
+
+### List jokes of a category
+
+Retrieve all jokes for a category
+
+```endpoint
+GET /v1/jokes/category/{category}
+```
+
+#### Example request
+
+```curl
+curl http://localhost:3333/v1/jokes/category/Linux%20jokes
+```
+
+#### Example response
+
+```json
+{
+    "jokes": [
+        {
+            "id_joke": 1,
+            "joke_content": "Why don't Linux users fear getting lost? Because they always have a shell to guide them!",
+            "likes": 0,
+            "dislikes": 0
+        },
+        {
+            "id_joke": 3,
+            "joke_content": "Why do programmers prefer Linux? Because you can't 'window' a penguin!",
+            "likes": 0,
+            "dislikes": 0
+        },
+        {
+            "id_joke": 4,
+            "joke_content": "Why don't Linux users make New Year's resolutions? Because they're always improving their 'system'!",
+            "likes": 0,
+            "dislikes": 0
+        }
+    ]
+}
+```
+
+### Joke by ID
+
+Retrive a joke by ID
+
+```endpoint
+GET /v1/jokes/{id}
+```
+
+#### Example request
+
+```curl
+curl https://localhost:3333/v1/jokes/1
+```
+
+#### Example response
+
+```json
+{
+    "joke": {
+        "id_joke": 1,
+        "joke_content": "Why don't Linux users fear getting lost? Because they always have a shell to guide them!",
+        "likes": 0,
+        "dislikes": 0
+    }
+}
+```
+
+-------
+STOP HERE!
+-------
 
 ### Insert or update a wibble
 
