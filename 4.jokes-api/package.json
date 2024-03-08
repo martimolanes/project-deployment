@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "docs": "cd docbox && npm ci && npm start"
+    "docs": "cd docbox && npm ci && npm start",
+    "docs-dev": "cd docbox && npm start"
   },
   "author": "",
   "license": "ISC",
