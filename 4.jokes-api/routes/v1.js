@@ -49,7 +49,7 @@ router.get("/jokes/category/:category", async (req, res) => {
 router.get("/jokes/:id", async (req, res) => { 
     const id_joke = req.params.id
     try {
-        const joke = await database.getJokeContent(db, id_joke);
+        const joke = await database.getJoke(db, id_joke);
         res.json({ joke });
     } catch (err) {
         res.status(500).send({ error: err.message });
