@@ -1,5 +1,3 @@
-## Jokes
-
 This is our high-quality Jokes API. You can use this API to request
 and remove different jokes.
 
@@ -29,37 +27,32 @@ $ curl http://localhost:3333/v1/jokes/random
 ]
 ```
 
-### Add a new category
+### Random joke from a category of jokes
 
-Create a new category of jokes
+Retrieves a random joke from a selected category
+
+To escape space in the URL if using categories with space - use `%20`
 
 ```endpoint
-POST /v1/categories
+GET /v1/jokes/category/{category}/random
 ```
 
 #### Example request
 
 ```curl
-curl -X POST -H "Content-Type: application/json" -d "{ \"category\": \"Funny Jokes\" }" http://localhost:3333/v1/categories
+curl http://localhost:3333/v1/jokes/category/Linux%20jokes/random
 ```
-
-#### Example request body
-
-```json
-{
-    "category":"Funny jokes"
-}
-```
-
-Property | Description
----|---
-`category` | Name of the caterogy
 
 #### Example response
 
 ```json
 {
-    "category": "Fuuny jokes"
+    "joke": {
+        "id_joke": 1,
+        "joke_content": "Why don't Linux users fear getting lost? Because they always have a shell to guide them!",
+        "likes": 0,
+        "dislikes": 0
+    }
 }
 ```
 
@@ -97,35 +90,6 @@ curl http://localhost:3333/v1/categories
             "category": "Windows jokes"
         }
     ]
-}
-```
-
-### Random joke from a category of jokes
-
-Retrieves a random joke from a selected category
-
-To escape space in the URL if using categories with space - use `%20`
-
-```endpoint
-GET /v1/jokes/category/{category}/random
-```
-
-#### Example request
-
-```curl
-curl http://localhost:3333/v1/jokes/category/Linux%20jokes/random
-```
-
-#### Example response
-
-```json
-{
-    "joke": {
-        "id_joke": 1,
-        "joke_content": "Why don't Linux users fear getting lost? Because they always have a shell to guide them!",
-        "likes": 0,
-        "dislikes": 0
-    }
 }
 ```
 
@@ -181,7 +145,7 @@ GET /v1/jokes/{id}
 #### Example request
 
 ```curl
-curl https://localhost:3333/v1/jokes/1
+curl http://localhost:3333/v1/jokes/1
 ```
 
 #### Example response
@@ -197,139 +161,149 @@ curl https://localhost:3333/v1/jokes/1
 }
 ```
 
--------
-STOP HERE!
--------
+### Add a new category
 
-### Insert or update a wibble
-
-Inserts or updates a wibble in a wobble. If there's already a wibble
-with the given ID in the wobble, it will be replaced. If there isn't
-a wibble with that ID, a new wibble is created.
+Create a new category of jokes
 
 ```endpoint
-PUT /wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
+POST /v1/categories
 ```
 
 #### Example request
 
 ```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id} \
-  -X PUT \
-  -d @file.geojson
-```
-
-```bash
-$ wbl wobble put-wibble wobble-id wibble-id 'geojson-wibble'
-```
-
-```javascript
-var wibble = {
-  "type": "Wobble",
-  "properties": { "name": "Null Island" }
-};
-client.insertWobble(wibble, 'wobble-id', function(err, wibble) {
-  console.log(wibble);
-});
+curl -X POST -H "Content-Type: application/json" -d "{ \"category\": \"Funny Jokes\" }" http://localhost:3333/v1/categories
 ```
 
 #### Example request body
 
 ```json
 {
-  "id": "{wibble_id}",
-  "type": "Wobble",
-  "properties": {
-    "prop0": "value0"
-  }
+    "category":"Funny jokes"
+}
+```
+
+Property | Description
+---|---
+`category` | Name of the caterogy
+
+#### Example response
+
+```json
+{
+    "category": "Fuuny jokes"
+}
+```
+
+### Add a new joke to a category
+
+Adds a new joke to already existing category.
+
+```endpoint
+POST /v1/jokes/category/{category}
+```
+
+#### Example request
+
+```curl
+curl -X POST -H "Content-Type: application/json" -d "{ \"joke_content\": \"Why don't skeletons fight each other? They don't have the guts.\" }" http://localhost:3333/v1/jokes/category/Dad%20jokes
+```
+
+#### Example request body
+
+```json
+{
+  "joke_content": "Why don't skeletons fight each other? They don't have the guts."
 }
 ```
 
 Property | Description
 --- | ---
-`id` | the id of an existing wibble in the wobble
+`joke_content` | the content of the joke
 
 #### Example response
 
 ```json
 {
-  "id": "{wibble_id}",
-  "type": "Wobble",
-  "properties": {
-    "prop0": "value0"
-  }
+  "joke_content": "Why don't skeletons fight each other? They don't have the guts."
 }
 ```
 
-### Retrieve a wibble
+### Add existing joke to a category by joke id
 
-Retrieves a wibble in a wobble.
+Adds already existing joke to a category by its id.
 
 ```endpoint
-GET /wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
+POST /v1/jokes/{id}/category/{category}
 ```
 
 #### Example request
 
 ```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-```bash
-$ wbl wobble read-wibble wobble-id wibble-id
-```
-
-```javascript
-client.readWobble('wibble-id', 'wobble-id',
-  function(err, wibble) {
-    console.log(wibble);
-  });
-```
-
-```python
-wibble = wobbles.read_wibble(wobble_id, '2').json()
+curl -X POST http://localhost:3333/v1/jokes/11/category/Science%20jokes
 ```
 
 #### Example response
 
 ```json
 {
-  "id": "{wibble_id}",
-  "type": "Wobble",
-  "properties": {
-    "prop0": "value0"
-  }
+    "id_joke": "11",
+    "category": "Science jokes"
 }
 ```
 
-### Delete a wibble
+Property | Description
+---|---
+`id_joke` | Joke of id
+`category` | Category of a joke
 
-Removes a wibble from a wobble.
+### Give joke a like
+
+Give joke a like
 
 ```endpoint
-DELETE /wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
+POST /v1/jokes/{id}/like
 ```
 
 #### Example request
 
-```javascript
-client.deleteWobble('wibble-id', 'wobble-id', function(err, wibble) {
-  if (!err) console.log('deleted!');
-});
-```
-
 ```curl
-curl -X DELETE https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-```python
-resp = wobbles.delete_wibble(wobble_id, wibble_id)
-```
-
-```bash
-$ wbl wobble delete-wibble wobble-id wibble-id
+curl -X POST http://localhost:3333/v1/jokes/1/like
 ```
 
 #### Example response
 
-> HTTP 204
+```json
+{
+  "id_joke":"1"
+}
+```
+Property | Description
+---|---
+`id_joke` | Joke of id
+
+### Give joke a dislike
+
+Give joke a dislike
+
+```endpoint
+POST /v1/jokes/{id}/dislike
+```
+
+#### Example request
+
+```curl
+curl -X POST http://localhost:3333/v1/jokes/1/dislike
+```
+
+#### Example response
+
+```json
+{
+  "id_joke":"1"
+}
+```
+
+Property | Description
+---|---
+`id_joke` | Joke of id
