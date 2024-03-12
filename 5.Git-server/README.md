@@ -2,8 +2,7 @@
 
 ## Abstract
 
-
-
+This report presents the process of setting up a Git server that is accessible via both a private and a public network. The private network can access with a password, while the public network requires ssh-keys for access. The server features a web interface for managing repositories. The setup involves creating a network topology, preparing a Linux server with Git, and configuring a router for network connections. The user interface is built using cgit, running on a Docker container.
 
 ## Table of Contents
 
@@ -83,4 +82,4 @@ To access the web interface, open a web browser and navigate to `http://<server-
 
 ## Conclusion
 
-
+In conclusion, we successfully set up a Git server that can be accessed from both private and public networks using different authentication methods. By utilizing Docker, we were able to easily deploy a web interface using cgit. This setup ensures secure access while providing a user-friendly interface for managing repositories.
