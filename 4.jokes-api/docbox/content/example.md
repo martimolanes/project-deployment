@@ -191,7 +191,7 @@ Property | Description
 
 ```json
 {
-    "category": "Fuuny jokes"
+    "category": "Funny jokes"
 }
 ```
 
