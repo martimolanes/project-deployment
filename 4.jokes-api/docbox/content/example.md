@@ -6,7 +6,7 @@ and remove different jokes.
 Retrive a random joke from the joke pool
 
 ```endpoint
-GET /jokes/v1/random
+GET /v1/jokes/random
 ```
 
 #### Example request
