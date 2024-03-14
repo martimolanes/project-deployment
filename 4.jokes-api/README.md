@@ -21,6 +21,15 @@ The project is structured as follows:
 ```
 > Note: jokes.db.example is an example of the database that has jokes already inserted. (remove .example to use it).
 
+## Hosting
+Our API is hosted in a VM in the Google Cloud Platform. For running our two services, we use the following commands:
+
+```bash 
+pm2 start app.js
+cd docbox
+pm2 start npm -- start
+```
+
 ## Documentation
 
 ![docs0](./images/images2024-03-12_12-49-27.png)
