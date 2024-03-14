@@ -53,6 +53,15 @@ mkdir /home/git/repositories
 chown git:git /home/git/repositories
 ```
 
+### Configure ssh
+We needed to configure ssh via the /etc/ssh/sshd_config file, so we could access with password only with local ips (with `PasswordAuthentication`), but it was not working. **Aparently** in ubuntu there is a default configuration file that only includes a line that overrides your entire sshd_config haha, so after more than 5 hours ( we have a pretty big infrastructure to debug: 1 cisco router, 1 switch, 1 AP, 2 networks, the git server, the virtualization system, the Port Translation rules) we found this file :'). And added the following rules:
+
+```bash
+PasswordAuthentication no
+Match Address 192.168.1.0/24
+    PasswordAuthentication yes
+```
+
 
 ## Building the UI
 
@@ -73,7 +82,19 @@ docker run --network host -v /home/git/repositories:/var/www/cgit -d --name cgit
 
 
 ## Accessing Git Server
+```bash
+git clone git@<url-git-sv>:martimolanes/test.git
+```
 
+## Create new repo 
+```bash
+ssh ad@<url-git-sv>
+mkdir home/git/martimolanes/<new-dir>.git
+cd !$
+git init --bare
+```
+
+> Note: inside that dir you can edit the description file to change the text displayed in `cgit`
 
 ### Accessing UI
 
