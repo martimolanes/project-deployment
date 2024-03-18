@@ -34,14 +34,14 @@ export const setupDatabase = () => {
     `
 
 
-    db.run( createJokesTable, (err) => {
+    db.run(createJokesTable, (err) => {
         if (err) {
             console.error(err.message);
         }
         console.log("Jokes table created.");
     });
 
-    db.run( createCategoriesTable, (err) => {
+    db.run(createCategoriesTable, (err) => {
         if (err) {
             console.error(err.message);
         }
@@ -49,7 +49,7 @@ export const setupDatabase = () => {
     }
     );
 
-    db.run( createJokesCategoriesTable, (err) => {
+    db.run(createJokesCategoriesTable, (err) => {
         if (err) {
             console.error(err.message);
         }
