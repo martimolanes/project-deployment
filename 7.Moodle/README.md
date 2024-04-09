@@ -61,7 +61,7 @@ The Moodle was configured to connect to LDAP with MS Active Directory server. Th
 
 - User lookup Settings:
     - User type: `MS Active Directory`
-    - Contexts: `DC=moodle,DC=local`
+    - Contexts: `OU=moodleusers,DC=moodle,DC=local`
     - Search subcontexts: `No`
     - User attribute: `sAMAccountName`
 
