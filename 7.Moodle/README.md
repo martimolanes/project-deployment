@@ -72,7 +72,7 @@ The Moodle was configured to connect to LDAP with MS Active Directory server. Th
 To create users for moodle application the MS Active Directory was used. The following steps were followed to create users:
 
 1. Open `Active Directory Users and Computers` on the Windows server.
-2. Right-click on the `Users` folder and select `New > User`.
+2. Right-click on the organizational unit `moodleusers` and select `New > User`.
 3. Fill in the user details and click `Next`.
 4. Set the password and click `Next`.
 5. Click `Finish` to create the user.
@@ -81,7 +81,7 @@ After creating user it can be used to login to the Moodle application.
 
 ## Encountered issues
 
-During this project few issues were discovered. One of them being the LDAP connection issue. By using Docker container, the LDAP connection was tested and it was found that the LDAP server was reached but the bind user was not found. This issue was resolved by setting up Moodle using Ubuntu server on virtual machine.
+During this project few issues were discovered. One of them being the LDAP connection issue. By using Docker container, the LDAP connection was tested and it was found that the LDAP server was reached but the bind user was not found. This issue was resolved by setting up Moodle using Ubuntu server on virtual machine. After setting it up on VM everything worked as expected.
 
 ## Conclusion
 
